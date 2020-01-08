@@ -1,0 +1,31 @@
+# Backup
+backup
+
+# Truffle
+build
+
+# Node
+node_modules
+package-lock.json
+
+# Mac specific
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# External
+external
+
+*.yml
+utils/config.js
+.nyc_output
+external/redis/dump.rdb
+
+# secrets
+.env
+
+# test files
+sample*.js

@@ -5,7 +5,7 @@ async function db(){
   sequelize
     .authenticate()
     .then(async () => {
-      sequelize.sync()
+      sequelize.sync({force: true})
       console.log('Sequelize is connected.');
       // await sequelize.query(`CREATE DATABASE ${process.env.POSTGRES_DBNAME};`)
     })

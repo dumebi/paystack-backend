@@ -1,7 +1,8 @@
 const CommentModel = require('../models/comment.model');
 const HttpStatus = require('http-status-codes');
 const { handleError, handleSuccess } = require('../helpers/utils');
-const { getCharacters } = require('../services/movie.service')
+const { getCharacters, getFilms, getComments, addMetadata, processCharacters } = require('../services/movie.service')
+const { getAsync } = require('../helpers/redis');
 const publisher = require('../helpers/rabbitmq');
 
 const MovieController = {
@@ -13,7 +14,14 @@ const MovieController = {
      */
   async films(req, res, next) {
     try {
-      
+      let movies = {}
+      const result = await getAsync('starwars_movies');
+      if (result != null && JSON.parse(result).length > 0) {
+        movies = JSON.parse(result);
+      } else {
+        movies = await getFilms();
+        movies = await getComments(movies);
+      }
       return handleSuccess(res, HttpStatus.OK, 'Movies retrieved successfully', movies)
     } catch (error) {
       return handleError(res, HttpStatus.BAD_REQUEST, 'Error getting movies', error)
@@ -29,7 +37,17 @@ const MovieController = {
      */
     async characters(req, res, next) {
       try {
-        const characters = await getCharacters(req.query)
+        let characters = {}
+        const result = await getAsync('starwars_characters');
+        if (result != null && JSON.parse(result).length > 0) {
+          characters = JSON.parse(result);
+         } else {
+          characters = await getCharacters(req.query)
+          // add to cache
+          await publisher.queue('ADD_TO_CACHE', { object: characters, key: 'starwars_characters' })
+        }
+        characters = await processCharacters(characters, req.query);
+        characters = await addMetadata(characters);
         return handleSuccess(res, HttpStatus.OK, 'Characters retrieved successfully', characters)
       } catch (error) {
         return handleError(res, HttpStatus.BAD_REQUEST, 'Error getting characters', error)

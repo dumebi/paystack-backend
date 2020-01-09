@@ -1,5 +1,3 @@
-// import bunyan from 'bunyan';
-// import { reqSerializer } from './serializers';
 const bunyan = require('bunyan');
 const { reqSerializer } = require('./serializers');
 require('dotenv').config();

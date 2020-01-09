@@ -13,6 +13,8 @@ const flash = require('connect-flash');
 
 const app = express();
 require('dotenv').config();
+require('./helpers/connection').rabbitmq();
+require('./helpers/connection').subscribe();
 
 // Midelware stack
 app.use(express.json());

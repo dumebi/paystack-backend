@@ -33,9 +33,9 @@ exports.validate_movie_id = async (req, res, next) => {
 exports.validate_character_requests = async (req, res, next) => {
   try {
     const schema = Joi.object().keys({
-      filter: Joi.string().valid('male', 'female').label('Filter Query'),
-      sort: Joi.string().valid('name', 'gender', 'height').label('Sort Query'),
-      order: Joi.string().valid('asc', 'desc', 'ascending', 'descending').label('Order Query'),
+      filter: Joi.string().valid('male', 'female').label('Filter'),
+      sort: Joi.string().valid('name', 'gender', 'height').label('Sort'),
+      order: Joi.string().valid('asc', 'desc', 'ascending', 'descending').label('Order'),
     })
     await Joi.validate(req.query, schema);
     next()

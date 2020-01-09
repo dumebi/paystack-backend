@@ -17,8 +17,8 @@ if (process.env.NODE_ENV === 'development') {
   this.config.amqp_url = `${process.env.AMQP_URL}`
   this.config.port = `${process.env.PORT}`
 } else {
-  this.config.postgres = `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:5432/${process.env.POSTGRES_DBNAME}`
-  this.config.host = `https://damp-thicket-34433.herokuapp.com/v1/`
+  this.config.postgres = `${process.env.DATABASE_URL}`
+  this.config.host = `https://paystack-assessment.herokuapp.com/v1/`
   this.config.amqp_url = `${process.env.CLOUDAMQP_URL}`
   this.config.port = `${process.env.PORT}`
   this.config.redis = `${process.env.REDIS_URL}`

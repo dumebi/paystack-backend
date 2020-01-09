@@ -1,9 +1,9 @@
 # Paystack Developer Application Test
 
 ## Live Postman Docs 
-
+https://documenter.getpostman.com/view/788782/SWLh5SDx?version=latest
 ## Backend 
-
+https://paystack-assessment.herokuapp.com/v1/
 ## BUILD 
 To run locally, type `docker-compose up --build`
 
@@ -16,5 +16,4 @@ To push to github, run `npm run git -- "{commit message}"`
 
 
 # Tools/Stack
-
-NodeJs, Postgres
+NodeJs, Postgres, Redis, Rabbitmq

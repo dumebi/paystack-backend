@@ -24,6 +24,9 @@ utils/config.js
 .nyc_output
 external/redis/dump.rdb
 
+#Docker
+!docker-compose.yml
+
 # secrets
 .env
 

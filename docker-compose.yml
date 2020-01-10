@@ -1,0 +1,60 @@
+version: '3'
+services:
+  redis:
+    image: 'redis:latest'
+    restart: always
+    networks:
+      - main
+    ports:
+      - 6379:6379
+    volumes:
+      - ./external/redis:/data
+
+  postgres_db:
+    image: postgres
+    restart: always
+    ports:
+    - "5432:3306"
+    networks:
+      - main
+    environment:
+      POSTGRES_USER: paystack
+      POSTGRES_PASSWORD: paystack
+      FILLA_DB_DATABASE: starwars
+    volumes:
+      - ./external/postgres:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: 'rabbitmq:latest'
+    restart: always
+    networks:
+      - main
+    ports:
+      - 5672:5672
+    volumes:
+      - ./external/rabbitmq:/data
+
+  backend:
+    container_name: starwars-api
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - ./compose.env
+    depends_on:
+      - postgres_db
+      - redis
+      - rabbitmq
+    networks:
+      - main
+    command: ['./wait-for-it.sh', 'rabbitmq:5672', '--', 'npm', 'run', 'dev']
+    ports:
+      - 3050:3050
+
+networks:
+  main:
+    driver: bridge

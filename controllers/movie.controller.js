@@ -3,7 +3,9 @@ const HttpStatus = require('http-status-codes');
 const { handleError, handleSuccess } = require('../helpers/utils');
 const { getCharacters, getFilms, getComments, addMetadata, processCharacters } = require('../services/movie.service')
 const { getAsync } = require('../helpers/redis');
-const publisher = require('../helpers/rabbitmq');
+// const publisher = require('../helpers/rabbitmq');
+const EventEmitter = require('events').EventEmitter;
+const emitter = new EventEmitter();
 
 const MovieController = {
   /**
@@ -44,7 +46,7 @@ const MovieController = {
          } else {
           characters = await getCharacters(req.query)
           // add to cache
-          await publisher.queue('ADD_TO_CACHE', { object: characters, key: 'starwars_characters' })
+          emitter.emit('ADD_TO_CACHE', JSON.stringify({ object: characters, key: 'starwars_characters' }));
         }
         characters = await processCharacters(characters, req.query);
         characters = await addMetadata(characters);

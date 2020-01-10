@@ -1,7 +1,8 @@
 const axios = require('../helpers/axios')
 const { client } = require('../helpers/redis');
-const publisher = require('../helpers/rabbitmq');
 const CommentModel = require('../models/comment.model');
+const EventEmitter = require('events').EventEmitter;
+const emitter = new EventEmitter();
 
 
 function toFeet(n) {
@@ -69,7 +70,7 @@ exports.getFilms = async () => {
     }).sort(function(a, b){
       return new Date(a.release_date) - new Date(b.release_date);
     });
-    await publisher.queue('ADD_TO_CACHE', { object: movies, key: 'starwars_movies' })
+    emitter.emit('ADD_TO_CACHE', JSON.stringify({ object: movies, key: 'starwars_movies' }));
     return movies;
   } catch (error) {
     throw error;

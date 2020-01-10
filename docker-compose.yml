@@ -24,15 +24,15 @@ services:
     volumes:
       - ./external/postgres:/var/lib/postgresql/data
 
-  rabbitmq:
-    image: 'rabbitmq:latest'
-    restart: always
-    networks:
-      - main
-    ports:
-      - 5672:5672
-    volumes:
-      - ./external/rabbitmq:/data
+  # rabbitmq:
+  #   image: 'rabbitmq:latest'
+  #   restart: always
+  #   networks:
+  #     - main
+  #   ports:
+  #     - 5672:5672
+  #   volumes:
+  #     - ./external/rabbitmq:/data
 
   backend:
     container_name: starwars-api
@@ -48,10 +48,10 @@ services:
     depends_on:
       - postgres_db
       - redis
-      - rabbitmq
     networks:
       - main
-    command: ['./wait-for-it.sh', 'rabbitmq:5672', '--', 'npm', 'run', 'dev']
+    # command: ['./wait-for-it.sh', 'rabbitmq:5672', '--', 'npm', 'run', 'dev']
+    command: npm run dev
     ports:
       - 3050:3050
 
